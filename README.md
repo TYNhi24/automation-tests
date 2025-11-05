@@ -52,19 +52,20 @@ Dự án này chứa các kịch bản kiểm thử End-to-End (E2E) cho ứng d
     ```
 
 ---
-
-⚡ Chạy Kiểm thử (Running Tests)
+## ⚡ Chạy Kiểm thử (Running Tests)
 
 Sau khi cài đặt xong, bạn có thể chạy test bằng một trong các cách sau:
 
-🧩 Cách 1: Chạy bằng lệnh Maven (Khuyên dùng)
+### Cách 1: Chạy bằng lệnh Maven (Khuyên dùng)
 
-Chạy toàn bộ các bộ test (test suites) đã được định nghĩa trong testng.xml:
+Cách chạy toàn bộ các bộ test (test suites) đã được định nghĩa trong `testng.xml`.
 
+```bash
 # Đảm bảo bạn đang ở trong thư mục automation-tests
 mvn test
+```
 
-🧩 Cách 2: Chạy bằng VS Code (Sử dụng "Test Runner for Java")
+### Cách 2: Chạy bằng VS Code (Sử dụng "Test Runner for Java")
 
 Để chạy test trực tiếp từ VS Code, hãy đảm bảo bạn đã cài đặt Extension Pack for Java.
 
@@ -79,3 +80,13 @@ Bạn sẽ thấy các tùy chọn Run | Debug xuất hiện:
 Chạy tất cả test trong file: Nhấn Run ngay bên trên dòng public class LoginTests { ... }.
 
 Chạy một test case cụ thể: Nhấn Run ngay bên trên phương thức có annotation @Test mà bạn muốn chạy (ví dụ: public void TC001...).
+
+---
+
+## 📊 Xem Báo cáo (Viewing Reports)
+
+Sau khi chạy xong (bằng mvn test), TestNG và Maven Surefire sẽ tạo ra một báo cáo HTML chi tiết.
+
+Bạn có thể tìm báo cáo tại: target/surefire-reports/index.html
+
+(Hoặc emailable-report.html để có báo cáo đơn giản hơn).
