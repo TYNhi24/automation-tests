@@ -27,17 +27,49 @@ public class ProjectListTest extends BaseTest {
         loginPage.loginUser("test@gmail.com", "Password123");
     }
 
+    /**
+     * Test Case: Kiểm tra hiển thị danh sách dự án có dữ liệu
+     * Expected: Hiển thị danh sách đầy đủ các dự án
+     */
     @Test
     public void testProjectListNotEmpty() {
-        MockUtils.mockProject("Test Project", "Description for test project", userId);
+        MockUtils.mockProject("Dự án A", "Mô tả dự án A", userId);
         projectPage.waitForPageLoad();
         assert !projectPage.getProjectNames().isEmpty() : "Project list should not be empty after login";
     }
 
+    /**
+     * Test Case: Kiểm tra hiển thị danh sách dự án khi không có dự án nào
+     * Expected: Hiển thị thông báo “Chưa có dự án nào”
+     */
     @Test
     public void testProjectListEmpty() {
         projectPage.waitForPageLoad();
         assert projectPage.getProjectNames().isEmpty() : "Project list should be empty for non-existing project search";
+    }
+
+    /**
+     * Test Case: Kiểm tra tìm kiếm dự án với từ khóa tồn tại
+     * Expected: Hiển thị danh sách dự án đúng với từ khóa
+     */
+    @Test
+    public void testSearchProjectFound() {
+        MockUtils.mockProject("Dự án A", "Mô tả dự án A", userId);
+        projectPage.waitForPageLoad();
+        projectPage.searchProject("Dự án A");
+        assert projectPage.getProjectNames().contains("Dự án A") : "Search should return the correct project";
+    }
+
+    /**
+     * Test Case: Kiểm tra tìm kiếm dự án với từ khóa không tồn tại
+     * Expected: Hiển thị thông báo “Chưa có dự án nào”
+     */
+    @Test
+    public void testSearchProjectNotFound() {
+        MockUtils.mockProject("Dự án B", "Mô tả dự án B", userId);
+        projectPage.waitForPageLoad();
+        projectPage.searchProject("Dự án A");
+        assert projectPage.getProjectNames().isEmpty() : "Search for nonexistent project should return empty list";
     }
 
 }

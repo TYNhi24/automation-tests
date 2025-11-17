@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -16,6 +18,7 @@ public class ProjectPage extends BasePage {
     private final By projectNameElements = By.cssSelector("h3.text-lg.font-semibold.text-gray-900");
     private final By projectNameField = By.name("project_name");
     private final By projectDescField = By.name("description");
+    private final By searchField = By.xpath("//input[@placeholder='Tìm kiếm dự án theo tên...']");
     private final By createButton = By.xpath("//button[contains(.,'Tạo dự án mới')]");
     private final By editButton = By.xpath("//button[contains(text(),'Sửa')]");
     private final By deleteButton = By.xpath("//button[contains(text(),'Xóa')]");
@@ -33,13 +36,19 @@ public class ProjectPage extends BasePage {
     }
 
     public void waitForProjectName(String projectName) {
-        wait.until(driver -> getProjectNames().contains(projectName));
+        wait.until(localDriver -> getProjectNames().contains(projectName));
     }
 
     public List<String> getProjectNames() {
         List<WebElement> elements = driver.findElements(projectNameElements);
         return elements.stream()
-                .map(WebElement::getText)
+                .map(e -> {
+                    try {
+                        return e.getText();
+                    } catch (StaleElementReferenceException ex) {
+                        return driver.findElement(projectNameElements).getText();
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
@@ -57,6 +66,14 @@ public class ProjectPage extends BasePage {
         enterProjectName(name);
         enterProjectDescription(description);
         return this;
+    }
+
+    public void searchProject(String keyword) {
+        WebElement searchInput = wait.until(ExpectedConditions.presenceOfElementLocated(searchField));
+        searchInput.clear();
+        searchInput.sendKeys(keyword);
+        searchInput.sendKeys(Keys.ENTER);
+        waitForPageLoad();
     }
 
     public void clickCreateButton() {
