@@ -25,6 +25,10 @@ public class WebDriverConfig {
     // Hàm khởi tạo trình duyệt
     public static void initializeDriver() throws IOException {
         loadProperties(); // Đọc config
+        if (driver != null) {
+            driver.quit();
+            driver = null;
+        }
         String browserName = prop.getProperty("BROWSER");
 
         if (browserName.equalsIgnoreCase("CHROME")) {
@@ -45,7 +49,9 @@ public class WebDriverConfig {
     public static String getBaseUrl() {
         return prop.getProperty("BASE_URL");
     }
-
+    public static WebDriver getDriver() { 
+        return driver; 
+    }
     // Hàm đóng trình duyệt
     public static void quitDriver() {
         if (driver != null) {

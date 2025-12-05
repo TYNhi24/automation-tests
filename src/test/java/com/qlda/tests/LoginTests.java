@@ -2,23 +2,18 @@ package com.qlda.tests;
 
 import java.io.IOException;
 
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
+
 import org.testng.annotations.Test;
-// import com.qlda.pages.LoginPage; // <-- TẠM THỜI TẮT ĐI
-import com.qlda.utils.WebDriverConfig;
 
-public class LoginTests {
-    WebDriver driver;
-    // LoginPage loginPage; // <-- TẠM THỜI TẮT ĐI
+import com.qlda.core.BaseTest;
+import com.qlda.pages.LoginPage;
+public class LoginTests extends BaseTest{
+    private LoginPage loginPage; 
 
-    @BeforeTest
-    public void init() throws IOException{
-        WebDriverConfig.initializeDriver(); // Khởi tạo driver từ lớp utils
-        driver = WebDriverConfig.driver;
-        driver.get(WebDriverConfig.getBaseUrl()); // Lấy URL từ file config
-        // loginPage = new LoginPage(driver); // <-- TẠM THỜI TẮT ĐI
+    @BeforeMethod
+    public void init() throws IOException{  
+        loginPage = new LoginPage(driver); 
     }
 
     @Test
@@ -32,9 +27,8 @@ public class LoginTests {
             e.printStackTrace();
         }
     }
-
-    @AfterTest
-    public void Teardown(){
-        WebDriverConfig.quitDriver(); // Đóng trình duyệt
+    @Test
+    public void baseLogin(){
+        loginPage.login("user@gmail.com", "User12");       
     }
 }

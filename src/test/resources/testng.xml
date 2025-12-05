@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
 <suite name="QLDA Test Suite">
-    <test verbose="2" preserve-order="true" name="Login Tests">
+    <test verbose="2" preserve-order="true" name="Tests">
         <classes>
             <class name="com.qlda.tests.LoginTests"/>
-            
-            </classes>
+            <class name="com.qlda.tests.ForgotPasswordTests"/>
+            <!-- <class name="com.qlda.tests.UserProfileTests"/> -->
+            <class name="com.qlda.tests.TaskListTests"/>
+        </classes>
     </test>
 </suite>
