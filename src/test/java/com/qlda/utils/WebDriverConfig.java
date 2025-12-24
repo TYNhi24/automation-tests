@@ -1,14 +1,15 @@
 package com.qlda.utils;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.edge.EdgeDriver;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class WebDriverConfig {
 
@@ -28,7 +29,7 @@ public class WebDriverConfig {
         String browserName = prop.getProperty("BROWSER");
 
         if (browserName.equalsIgnoreCase("CHROME")) {
-            WebDriverManager.chromedriver().setup(); // Tự động tải driver
+            WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver();
         } else if (browserName.equalsIgnoreCase("FIREFOX")) {
             WebDriverManager.firefoxdriver().setup();
@@ -39,6 +40,33 @@ public class WebDriverConfig {
         }
 
         driver.manage().window().maximize();
+    }
+
+    // Hàm tạo WebDriver mới
+    public static WebDriver createDriver() {
+        try {
+            if (prop == null) {
+                loadProperties();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot load config properties", e);
+        }
+        String browserName = prop.getProperty("BROWSER", "CHROME");
+        WebDriver newDriver;
+        if (browserName.equalsIgnoreCase("CHROME")) {
+            WebDriverManager.chromedriver().setup();
+            newDriver = new ChromeDriver();
+        } else if (browserName.equalsIgnoreCase("FIREFOX")) {
+            WebDriverManager.firefoxdriver().setup();
+            newDriver = new FirefoxDriver();
+        } else if (browserName.equalsIgnoreCase("EDGE")) {
+            WebDriverManager.edgedriver().setup();
+            newDriver = new EdgeDriver();
+        } else {
+            throw new RuntimeException("Unsupported browser: " + browserName);
+        }
+        newDriver.manage().window().maximize();
+        return newDriver;
     }
 
     // Hàm lấy URL từ file config

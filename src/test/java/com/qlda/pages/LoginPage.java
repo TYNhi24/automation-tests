@@ -22,13 +22,14 @@ public class LoginPage extends BasePage {
         return this;
     }
 
+
     public LoginPage enterEmail(String email) {
-        waitAndSendKeys(emailField, email);
+        type(emailField, email);
         return this;
     }
 
     public LoginPage enterPassword(String password) {
-        waitAndSendKeys(passwordField, password);
+        type(passwordField, password);
         return this;
     }
 
@@ -39,8 +40,9 @@ public class LoginPage extends BasePage {
         return this;
     }
 
+
     public void clickLogin() {
-        waitAndClick(loginButton);
+        click(loginButton);
     }
 
     public void loginUser(String email, String password) {
@@ -48,8 +50,9 @@ public class LoginPage extends BasePage {
         clickLogin();
     }
 
+
     public void loginWithGoogle() {
-        waitAndClick(googleLoginButton);
+        click(googleLoginButton);
     }
 
     public boolean isSuccessful() {

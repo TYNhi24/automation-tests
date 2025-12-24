@@ -30,40 +30,45 @@ public class RegisterPage extends BasePage {
     /**
      * Enter display name
      */
+
     public RegisterPage enterDisplayName(String name) {
-        waitAndSendKeys(displayNameField, name);
+        type(displayNameField, name);
         return this;
     }
 
     /**
      * Enter email
      */
+
     public RegisterPage enterEmail(String email) {
-        waitAndSendKeys(emailField, email);
+        type(emailField, email);
         return this;
     }
 
     /**
      * Enter password
      */
+
     public RegisterPage enterPassword(String password) {
-        waitAndSendKeys(passwordField, password);
+        type(passwordField, password);
         return this;
     }
 
     /**
      * Enter confirm password (try both locators)
      */
+
     public RegisterPage enterConfirmPassword(String confirmPassword) {
-        waitAndSendKeys(confirmPasswordField, confirmPassword);
+        type(confirmPasswordField, confirmPassword);
         return this;
     }
 
     /**
      * Click register button
      */
+
     public void clickRegister() {
-        waitAndClick(registerButton);
+        click(registerButton);
     }
 
     /**

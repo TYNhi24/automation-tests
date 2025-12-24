@@ -12,8 +12,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.qlda.core.BasePage;
+import com.qlda.utils.WebDriverConfig;
 
 public class ProjectPage extends BasePage {
+    
     private final By projectHeader = By.cssSelector("h1.text-3xl.font-bold.text-gray-900");
     private final By projectNameElements = By.cssSelector("h3.text-lg.font-semibold.text-gray-900");
     private final By projectNameField = By.name("project_name");
@@ -25,7 +27,16 @@ public class ProjectPage extends BasePage {
     private final By submitButton = By.cssSelector("form button[type='submit']");
     private final By confirmDeleteButton = By.xpath("//button[contains(text(),'Xác nhận xóa')]");
     private final By cancelButton = By.xpath("//button[contains(.,'Hủy')]");
+    private final By viewButton = By.xpath("//button[normalize-space()='Xem']");
 
+    private final By inviteButton = By.xpath("//span[contains(text(),'Chia sẻ')]");
+    private final By inviteEmailField = By.xpath("//input[@placeholder='Nhập email hoặc tên thành viên...']");
+    private final By inviteButtonSubmit = By.xpath("//button[normalize-space()='+ Thêm']");
+    private final By closeInvitePopupButton = By.xpath("//button[@aria-label='Đóng']//*[name()='svg']");
+
+    private final By profileMenuButton = By.xpath("//div[@class='flex items-center justify-end gap-3 w-64']//div[@class='relative']");
+    private final By logoutButton = By.xpath("//button[contains(text(),'Đăng xuất')]");
+    
     public ProjectPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
@@ -35,8 +46,16 @@ public class ProjectPage extends BasePage {
         return this;
     }
 
+    public void goToProject(String projectId) {
+        driver.get(WebDriverConfig.getBaseUrl() + "/projects/" + projectId);
+    }
+
     public void waitForProjectName(String projectName) {
         wait.until(localDriver -> getProjectNames().contains(projectName));
+    }
+
+    public void clickViewButton() {
+        click(viewButton);
     }
 
     public List<String> getProjectNames() {
@@ -52,13 +71,14 @@ public class ProjectPage extends BasePage {
                 .collect(Collectors.toList());
     }
 
+
     public ProjectPage enterProjectName(String name) {
-        waitAndSendKeys(projectNameField, name);
+        type(projectNameField, name);
         return this;
     }
 
     public ProjectPage enterProjectDescription(String description) {
-        waitAndSendKeys(projectDescField, description);
+        type(projectDescField, description);
         return this;
     }
 
@@ -76,28 +96,61 @@ public class ProjectPage extends BasePage {
         waitForPageLoad();
     }
 
+
     public void clickCreateButton() {
-        waitAndClick(createButton);
+        click(createButton);
     }
 
     public void clickEditButton() {
-        waitAndClick(editButton);
+        click(editButton);
     }
 
     public void clickDeleteButton() {
-        waitAndClick(deleteButton);
+        click(deleteButton);
     }
 
     public void clickSubmitButton() {
-        waitAndClick(submitButton);
+        click(submitButton);
     }
 
     public void clickConfirmDeleteButton() {
-        waitAndClick(confirmDeleteButton);
+        click(confirmDeleteButton);
     }
 
     public void clickCancelButton() {
-        waitAndClick(cancelButton);
+        click(cancelButton);
+    }
+
+    public void clickInviteButton() {
+        click(inviteButton);
+    }
+
+    public ProjectPage enterInviteEmail(String email) {
+        type(inviteEmailField, email);
+        return this;
+    }
+
+    public void clickInviteSubmitButton() {
+        click(inviteButtonSubmit);
+    }
+
+    public void closeInvitePopup() {
+        click(closeInvitePopupButton);
+    }
+
+    public boolean isInviteSuccessMessageDisplayed(String email) {
+        By successMessage = By.xpath("//p[normalize-space()='" + email + "']");
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(successMessage));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void logout() {
+        click(profileMenuButton);
+        click(logoutButton);
     }
 
 }

@@ -17,6 +17,9 @@ public class DatabaseUtils {
     static final String TASKS_COLLECTION = "tasks";
     static final String LISTS_COLLECTION = "lists";
     static final String PROJECT_MEMBERS_COLLECTION = "project_members";
+    static final String GROUP_ROOMS_COLLECTION = "group_rooms";
+    static final String CHAT_ROOM_MEMBERS_COLLECTION = "chat_room_members";
+    static final String CHAT_MESSAGES_COLLECTION = "chat_messages";
     
     private static MongoClient mongoClient;
     static MongoDatabase database;
@@ -73,6 +76,9 @@ public class DatabaseUtils {
         totalDeleted += clearTable(TASKS_COLLECTION);
         totalDeleted += clearTable(LISTS_COLLECTION);
         totalDeleted += clearTable(PROJECT_MEMBERS_COLLECTION);
+        totalDeleted += clearTable(GROUP_ROOMS_COLLECTION);
+        totalDeleted += clearTable(CHAT_ROOM_MEMBERS_COLLECTION);
+        totalDeleted += clearTable(CHAT_MESSAGES_COLLECTION);
         
         System.out.println("🎯 TOTAL CLEARED: " + totalDeleted + " documents from all tables");
     }
