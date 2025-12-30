@@ -5,6 +5,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.qlda.pages.HeaderComponentPage;
 import com.qlda.pages.UserProfilePage;
+import com.qlda.utils.DatabaseUtils;
+import com.qlda.utils.MockUtils;
 import com.qlda.pages.LoginPage;
 import com.qlda.core.BaseTest;
 
@@ -12,29 +14,50 @@ public class UserProfileTests extends BaseTest {
     private LoginPage loginPage; 
     private HeaderComponentPage headerComponent;
     private UserProfilePage userProfilePage;
-
+    private String userId;
     @BeforeMethod
     public void init() throws IOException {  
-        loginPage = new LoginPage(driver); 
+        DatabaseUtils.clearAllTables();
+        userId = MockUtils.mockUser("user@gmail.com", "User12", "Nhi");
+        
+        loginPage = new LoginPage(driver, wait); 
         loginPage.login("user@gmail.com", "User12");     
-        // Khởi tạo header component
-        headerComponent = new HeaderComponentPage(driver);
-        // Sau login → mở avatar → điều hướng đến profile
+        headerComponent = new HeaderComponentPage(driver, wait);
         userProfilePage = headerComponent.navigateToProfilePage();
     }
 
     @Test
-    public void verifyInfoProfileIsDisplayed() {
-        // Assert.assertTrue(
-        //     userProfilePage.isInfoDisplayed(),
-        //     "Thông tin user không hiển thị đúng"
-        // );
-        Assert.assertFalse(userProfilePage.getProjectNames().contains("Hồ sơ"), "Project should be created and visible in list");
+    public void verifyUserIsLoggedIn() {
+        String expectedName = "Nhi";        
+        Assert.assertTrue(userProfilePage.isUserNameDisplayed(expectedName), 
+                        "Tên người dùng " + expectedName + " không hiển thị!"
+        );
     }
+
     @Test
-    public void verifyTotalProjectIsDisplayed() {
-        Assert.assertFalse(userProfilePage.isTotalProjectDisplayed(), "Không thấy dòng Tổng số");
-        Assert.assertEquals(userProfilePage.getTotalProjectText(), "Tổng số: 0 dự án");
+    public void verifyEmailIsLoggedIn() {
+        String expectedEmail = "user@gmail.com";        
+        Assert.assertTrue(userProfilePage.isEmailDisplayed(expectedEmail), 
+                        "Email " + expectedEmail + " không hiển thị!"
+        );
     }
+
+    @Test
+    public void verifyCreatedProjectNo() {
+        String expected = "Bạn chưa tạo dự án nào.";        
+        Assert.assertTrue(userProfilePage.isNotCreatedProjectNDisplayed(expected), 
+                        "Tồn tại dự án đã tạo!"
+        );
     }
+
+    @Test
+    public void verifyCreatedProjectIs() {
+        MockUtils.mockProject("Dự án A", userId);
+        String expected = "Dự án A";     
+        driver.navigate().refresh();   
+        Assert.assertTrue(userProfilePage.isCreatedProjectDisplayed(expected), 
+                        "Không tồn tại dự án: " + expected
+        );
+    }
+}
 

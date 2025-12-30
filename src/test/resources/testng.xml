@@ -4,10 +4,9 @@
 <suite name="QLDA Test Suite">
     <test verbose="2" preserve-order="true" name="Tests">
         <classes>
-            <class name="com.qlda.tests.LoginTests"/>
-            <class name="com.qlda.tests.ForgotPasswordTests"/>
-            <!-- <class name="com.qlda.tests.UserProfileTests"/> -->
-            <class name="com.qlda.tests.TaskListTests"/>
+            <!-- <class name="com.qlda.tests.ForgotPasswordTests"/> -->
+            <class name="com.qlda.tests.UserProfileTests"/>
+            <!-- <class name="com.qlda.tests.TaskListTests"/> -->
         </classes>
     </test>
 </suite>

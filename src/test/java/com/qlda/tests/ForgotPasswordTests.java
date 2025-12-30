@@ -14,7 +14,7 @@ public class ForgotPasswordTests extends BaseTest {
     private ForgotPasswordPage forgotPage;
     @BeforeMethod
     public void init() throws IOException{  
-        loginPage = new LoginPage(driver); 
+        loginPage = new LoginPage(driver, wait); 
     }
      /**
      * Test Case: Kiểm tra hiển thị form Quên mật khẩu
@@ -22,7 +22,7 @@ public class ForgotPasswordTests extends BaseTest {
      */
     @Test
      public void verifyForgotPasswordFormIsDisplayed(){     
-        ForgotPasswordPage forgotPage = loginPage.clickForgotPasswordLink();
+        forgotPage = loginPage.clickForgotPasswordLink();
         Assert.assertTrue(
                 forgotPage.isFormDisplayed(),
                 "Form quên mật khẩu không hiển thị đúng"
@@ -38,8 +38,8 @@ public class ForgotPasswordTests extends BaseTest {
      * Expected: Hiển thị lỗi: “Email không hợp lệ”.
      */
     @Test
-    public void verifyInvalidEmailFormatShowsBrowserError() {
-        String invalidEmail = "rrr"; 
+    public void verifyInvalidEmailFormat() {
+        String invalidEmail = "user"; 
         forgotPage = loginPage.clickForgotPasswordLink();
         // 1. Nhập email sai định dạng
         forgotPage.enterEmail(invalidEmail);

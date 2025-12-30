@@ -1,39 +1,26 @@
 package com.qlda.pages;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.interactions.Actions;
+import com.qlda.core.BasePage;
 import java.time.Duration;
 
-public class ProjectDetailPage {
-    private WebDriver driver;
-    private  WebDriverWait wait;
-    public ProjectDetailPage(WebDriver driver) {
-        this.driver = driver;
+public class ProjectDetailPage extends BasePage {
+  
+    public ProjectDetailPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
     }
-   // nút "Xem" dự án
-    private By viewProject = By.xpath(
-    "(//div[contains(@class,'flex gap-2')]//button[contains(.,'Xem')])[1]");
+    private By viewProject = By.xpath("(//div[contains(@class,'flex gap-2')]//button[contains(.,'Xem')])[1]");
 
-    // khu vực danh sách thẻ công việc (board)
     private By taskBoard = By.xpath("//div[contains(@class,'flex-grow') and contains(@class,'overflow-y-auto')]");
-
-    // mỗi thẻ công việc
-    private By taskCards = By.xpath("//div[contains(@class,'bg-gray-100') and contains(@class,'rounded-lg')]");
-
-    // tiêu đề trên từng thẻ (relative!)
-    private By taskTitleInCard = By.xpath(".//h2");
 
     public void clickView() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement btn = wait.until(
-                ExpectedConditions.elementToBeClickable(viewProject)
-        );
+        WebElement btn = wait.until( ExpectedConditions.elementToBeClickable(viewProject));
         btn.click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(taskBoard));
     }
@@ -42,18 +29,43 @@ public class ProjectDetailPage {
         return driver.findElement(taskBoard).isDisplayed();
     }
 
-    public int getTaskCount() {
-        return driver.findElements(taskCards).size();
+    public boolean isTaskInsideList(String listName, String taskName) {
+        try {
+            String dynamicXPath = "//div[normalize-space()='" + listName + "']" +
+                                "/ancestor::div[contains(@class, 'rounded-lg') or contains(@class, 'w-')][1]" + 
+                                "//*[normalize-space()='" + taskName + "']";
+            
+            System.out.println("DEBUG: Searching XPath: " + dynamicXPath);
+            
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(dynamicXPath))).isDisplayed();
+        } catch (Exception e) {
+            System.err.println("Không tìm thấy Task '" + taskName + "' trong '" + listName + "'");
+            return false;
+        }
     }
 
-    public List<String> getTaskTitles() {
-        return driver.findElements(taskCards)
-                .stream()
-                .map(e -> e.findElement(taskTitleInCard).getText().trim())
-                .collect(Collectors.toList());
+    private By listHeader(String listName) {
+        return By.xpath("//*[contains(text(),'" + listName + "')]");
+    }
+
+    // Kéo thả danh sách công việc
+    public void dragAndDropList(String sourceListName, String targetListName) {
+        Actions actions = new Actions(driver);
+        WebElement source = wait.until(ExpectedConditions.visibilityOfElementLocated(listHeader(sourceListName)));
+        WebElement target = wait.until(ExpectedConditions.visibilityOfElementLocated(listHeader(targetListName)));
+
+        actions.dragAndDrop(source, target).build().perform();
     }
     
     // checkbox
+    public boolean isCheckBoxDisplayed() {
+        try {
+            String cssString = "input[type='checkbox']";
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(cssString))).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
     private By taskRowByName(String name) {
         return By.xpath(
                 "//div[contains(@class,'task-row') or contains(@class,'flex items-center')]" +
@@ -96,4 +108,5 @@ public class ProjectDetailPage {
         String aria = cb.getAttribute("aria-checked");
         return "true".equalsIgnoreCase(aria);
     }
+    
 }
