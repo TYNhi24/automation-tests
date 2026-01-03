@@ -15,8 +15,8 @@ public class ProjectDetailPage extends BasePage {
         super(driver, wait);
     }
     private By viewProject = By.xpath("(//div[contains(@class,'flex gap-2')]//button[contains(.,'Xem')])[1]");
-
     private By taskBoard = By.xpath("//div[contains(@class,'flex-grow') and contains(@class,'overflow-y-auto')]");
+    private By shareBtn = By.xpath("//button[normalize-space()='Chia sẻ']");  
 
     public void clickView() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -66,47 +66,38 @@ public class ProjectDetailPage extends BasePage {
             return false;
         }
     }
+    // tìm hàng chứa Task
     private By taskRowByName(String name) {
-        return By.xpath(
-                "//div[contains(@class,'task-row') or contains(@class,'flex items-center')]" +
-                "[.//span[normalize-space()='" + name + "']]"
-        );
+        return By.xpath("//div[p[normalize-space()='" + name + "']]");
     }
 
-    private By checkboxInsideRow = By.xpath(".//input[@type='checkbox' or @role='checkbox']");
+    // checkbox nằm bên trong hàng 
+    private By checkboxInsideRow = By.xpath(".//input[@type='checkbox']");
 
-    /**hiển thị checkbox với từng nhiệm vụ */
-    public boolean isTaskCheckboxDisplayed(String taskName) {
-        WebElement row = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(taskRowByName(taskName))
-        );
-        return row.findElement(checkboxInsideRow).isDisplayed();
-    }
-
-    /** click vào checkbox */
+    //click vào checkbox của một task cụ thể
     public void toggleTaskCheckbox(String taskName) {
-        WebElement row = wait.until(
-                ExpectedConditions.elementToBeClickable(taskRowByName(taskName))
-        );
+        WebElement row = wait.until( ExpectedConditions.visibilityOfElementLocated(taskRowByName(taskName)));
         WebElement cb = row.findElement(checkboxInsideRow);
         cb.click();
     }
 
-    /** trạng thái đã hoàn thành hay chưa
-     *  - nếu là <input type="checkbox">: dùng isSelected()
-     *  - nếu là button role="checkbox": check aria-checked
-     */
+    // Kiểm tra trạng thái hoàn thành: khi hoàn thành thẻ <p> sẽ có class 'line-through'
     public boolean isTaskCompleted(String taskName) {
         WebElement row = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(taskRowByName(taskName))
         );
-        WebElement cb = row.findElement(checkboxInsideRow);
+        // Tìm thẻ p chứa tên task
+        WebElement taskText = row.findElement(By.xpath(".//p"));
+        String classValue = taskText.getAttribute("class");
+        return classValue != null && classValue.contains("line-through");
+    }
 
-        if ("input".equalsIgnoreCase(cb.getTagName())) {
-            return cb.isSelected();
-        }
-        String aria = cb.getAttribute("aria-checked");
-        return "true".equalsIgnoreCase(aria);
+    /** Click vào thẻ Task để xem chi tiết */
+    public void openTaskDetails(String taskName) {
+        String taskCardXPath = "//div[contains(@class, 'cursor-pointer') and .//*[normalize-space()='" + taskName + "']]";
+        WebElement card = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(taskCardXPath)));
+        card.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h3[contains(text(),'Mô tả')]")));
     }
     
 }

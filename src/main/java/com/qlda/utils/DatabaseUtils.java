@@ -15,6 +15,7 @@ public class DatabaseUtils {
     public static final String PROJECTS_COLLECTION = "projects";
     public static final String TASKS_COLLECTION = "tasks";
     public static final String LISTS_COLLECTION = "lists";
+    public static final String PROJECT_MEMBERS_COLLECTION = "project_members";
 
     private static MongoClient mongoClient;
     public static MongoDatabase database;
@@ -57,6 +58,7 @@ public class DatabaseUtils {
         totalDeleted += clearTable(PROJECTS_COLLECTION);
         totalDeleted += clearTable(TASKS_COLLECTION);
         totalDeleted += clearTable(LISTS_COLLECTION);
+        totalDeleted += clearTable(PROJECT_MEMBERS_COLLECTION);
         
         System.out.println("🎯 TỔNG CỘNG: Đã dọn sạch " + totalDeleted + " bản ghi.");
     }

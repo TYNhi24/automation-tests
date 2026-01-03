@@ -27,7 +27,7 @@ public class MockUtils {
         return user.getObjectId("_id").toHexString();
     }
 
-    // 2. Tạo Dự án (Tiền đề cho TC_01)
+    // 2. Tạo Dự án 
     public static String mockProject(String projectName, String userId) {
         if (DatabaseUtils.database == null) DatabaseUtils.initConnection();
         MongoCollection<Document> projects = DatabaseUtils.database.getCollection(DatabaseUtils.PROJECTS_COLLECTION);
@@ -40,7 +40,7 @@ public class MockUtils {
         return project.getObjectId("_id").toHexString();
     }
 
-    // 3. Tạo Danh sách công việc (Tiền đề cho TC_01, TC_03)
+    // 3. Tạo Danh sách công việc 
     public static String mockList(String projectId, String title, int position) {
         if (DatabaseUtils.database == null) DatabaseUtils.initConnection();
         MongoCollection<Document> lists = DatabaseUtils.database.getCollection(DatabaseUtils.LISTS_COLLECTION);
@@ -54,8 +54,8 @@ public class MockUtils {
         return list.getObjectId("_id").toHexString();
     }
 
-    // 4. Tạo Thẻ công việc (Tiền đề cho TC_02)
-    public static void mockTask(String listId, String taskTitle) {
+    // 4. Tạo Thẻ công việc
+    public static String mockTask(String listId, String taskTitle) {
         if (DatabaseUtils.database == null) DatabaseUtils.initConnection();
         MongoCollection<Document> tasks = DatabaseUtils.database.getCollection(DatabaseUtils.TASKS_COLLECTION);
 
@@ -63,8 +63,36 @@ public class MockUtils {
                 .append("title", taskTitle)
                 .append("status", "todo")
                 .append("is_completed", false)
+                .append("members", new java.util.ArrayList<ObjectId>()) // Khởi tạo mảng members trống
                 .append("created_at", new Date());
 
         tasks.insertOne(task);
+        return task.getObjectId("_id").toHexString();
     }
+
+
+    // 5. Chia sẻ dự án cho thành viên (Thêm vào project_members)
+    public static void mockProjectMember(String projectId, String userId, String role) {
+        if (DatabaseUtils.database == null) DatabaseUtils.initConnection();
+        MongoCollection<Document> projectMembers = DatabaseUtils.database.getCollection(DatabaseUtils.PROJECT_MEMBERS_COLLECTION);
+
+        Document member = new Document("project_id", new ObjectId(projectId))
+                .append("user_id", new ObjectId(userId))
+                .append("role", role) // role: "owner" hoặc "member"
+                .append("joined_at", new Date());
+
+        projectMembers.insertOne(member);
+    }
+
+    // 6. Gán thành viên vào thẻ công việc 
+    public static void assignMemberToTask(String taskId, String userId) {
+        if (DatabaseUtils.database == null) DatabaseUtils.initConnection();
+        MongoCollection<Document> tasks = DatabaseUtils.database.getCollection(DatabaseUtils.TASKS_COLLECTION);
+
+        tasks.updateOne(
+            new Document("_id", new ObjectId(taskId)),
+            new Document("$push", new Document("members", new ObjectId(userId)))
+        );
+    }
+
 }

@@ -25,7 +25,7 @@ public class TaskStatusTests extends BaseTest {
         String listId1 = MockUtils.mockList(projectId, "To Do", 0);
 
         MockUtils.mockTask(listId1, "Task A");
-
+        MockUtils.mockTask(listId1, "Task Â");
         loginPage = new LoginPage(driver, wait);
         loginPage.login("user@gmail.com", "User12");
         
@@ -35,41 +35,30 @@ public class TaskStatusTests extends BaseTest {
     }
 
     @Test(priority = 1, description = "Kiểm tra hiển thị checkbox")
-    public void shouldDisplayCheckboxForEachTask() {
+    public void shouldDisplayCheckbox() {
         Assert.assertTrue(projectDetailPage.isCheckBoxDisplayed(),
                 "Checkbox should be displayed for each task");
     }
 
-    @Test(priority = 1, description = "Kiểm tra Đánh dấu hoàn thành nhiệm vụ (từ chưa xong -> xong)")
+    @Test(priority = 2, description = "Kiểm tra Đánh dấu hoàn thành nhiệm vụ (từ chưa xong -> xong)")
     public void shouldMarkTaskAsCompletedWhenCheckingCheckbox() {
-        // đảm bảo ban đầu đang ở trạng thái chưa xong
-        if (projectDetailPage.isTaskCompleted("Task A")) {
-            projectDetailPage.toggleTaskCheckbox("Task A"); // uncheck để về chưa xong
-            Assert.assertFalse(projectDetailPage.isTaskCompleted("Task A"));
+        if (projectDetailPage.isTaskCompleted("Task Â")) {
+            projectDetailPage.toggleTaskCheckbox("Task Â");
+            Assert.assertFalse(projectDetailPage.isTaskCompleted("Task Â"));
         }
-
-        // hành động: tick vào checkbox
-        projectDetailPage.toggleTaskCheckbox("Task A");
-
-        // mong đợi: trạng thái chuyển sang xong
-        Assert.assertTrue(
-                projectDetailPage.isTaskCompleted("Task A"),
-                "Task should be completed after checking checkbox"
-        );
+        projectDetailPage.toggleTaskCheckbox("Task Â");
+        Assert.assertTrue(projectDetailPage.isTaskCompleted("Task Â"),
+                "Task should be completed after checking checkbox");
     }
 
-    @Test(priority = 1, description = "Kiểm tra Bỏ đánh dấu nhiệm vụ (từ xong -> chưa xong)")
+    @Test(priority = 3, description = "Kiểm tra Bỏ đánh dấu nhiệm vụ (từ xong -> chưa xong)")
     public void shouldUnmarkTaskAsCompletedWhenUncheckingCheckbox() {
-        // đảm bảo ban đầu đang ở trạng thái đã xong
         if (!projectDetailPage.isTaskCompleted("Task A")) {
             projectDetailPage.toggleTaskCheckbox("Task A"); // check để thành xong
             Assert.assertTrue(projectDetailPage.isTaskCompleted("Task A"));
         }
-        // hành động: bỏ tick
         projectDetailPage.toggleTaskCheckbox("Task A");
-        // mong đợi: trạng thái từ xong -> chưa xong
-        Assert.assertFalse(
-                projectDetailPage.isTaskCompleted("Task A"),
+        Assert.assertFalse(projectDetailPage.isTaskCompleted("Task A"),
                 "Task should not be completed after unchecking checkbox"
         );
     }
