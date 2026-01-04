@@ -8,7 +8,8 @@
             <class name="com.qlda.tests.UserProfileTests"/>
             <class name="com.qlda.tests.TaskListTests"/>
             <class name="com.qlda.tests.TaskStatusTests"/>
-            <class name="com.qlda.tests.TaskAssignmentTests"/>
+            <class name="com.qlda.tests.TaskAssignmentTests"/> 
+            <class name="com.qlda.tests.TaskCommentsTests"/>
         </classes>
     </test>
 </suite>

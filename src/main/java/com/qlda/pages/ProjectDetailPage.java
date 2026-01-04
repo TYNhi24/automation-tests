@@ -17,7 +17,7 @@ public class ProjectDetailPage extends BasePage {
     private By viewProject = By.xpath("(//div[contains(@class,'flex gap-2')]//button[contains(.,'Xem')])[1]");
     private By taskBoard = By.xpath("//div[contains(@class,'flex-grow') and contains(@class,'overflow-y-auto')]");
     private By shareBtn = By.xpath("//button[normalize-space()='Chia sẻ']");  
-
+    
     public void clickView() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement btn = wait.until( ExpectedConditions.elementToBeClickable(viewProject));
