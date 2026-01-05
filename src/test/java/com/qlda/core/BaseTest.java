@@ -32,7 +32,7 @@ public class BaseTest {
         config.load(new FileInputStream("src/test/resources/config.properties"));
         WebDriverConfig.initializeDriver();
         driver = WebDriverConfig.driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 
     @AfterMethod

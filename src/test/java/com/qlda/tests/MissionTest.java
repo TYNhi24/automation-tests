@@ -66,9 +66,9 @@ public class MissionTest extends BaseTest {
     @Test
     public void testAddMissionEmptyDescription() {
         taskPage.openMissionInput();
-        taskPage.addMission();
         taskPage.enterMission("");
-        Assert.assertTrue(taskPage.isMissionAdded(""), "Mission with empty description should not be added");
+        taskPage.addMission();
+        Assert.assertFalse(taskPage.isMissionAdded(""), "Mission with empty description should not be added");
     }
 
     /**
@@ -114,7 +114,7 @@ public class MissionTest extends BaseTest {
     public void testCancelAddMission() {
         String missionText = "Valid Mission";
         taskPage.openMissionInput();
-        taskPage.enterMission(missionText); 
+        taskPage.enterMission(missionText);
         taskPage.closeMissionInput();
         Assert.assertFalse(taskPage.isMissionAdded(missionText), "Mission should NOT be added after cancel");
     }

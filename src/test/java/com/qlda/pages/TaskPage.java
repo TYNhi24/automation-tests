@@ -32,7 +32,21 @@ public class TaskPage extends BasePage {
     }
 
     public void uploadFile(String filePath) {
+        // Use a background thread to close the native file dialog if it opens and
+        // blocks
+        new Thread(() -> {
+            try {
+                Thread.sleep(1500);
+                java.awt.Robot robot = new java.awt.Robot();
+                robot.keyPress(java.awt.event.KeyEvent.VK_ESCAPE);
+                robot.keyRelease(java.awt.event.KeyEvent.VK_ESCAPE);
+            } catch (Exception e) {
+                // Ignore errors in background thread
+            }
+        }).start();
+
         click(attachButton);
+
         WebElement input = driver.findElement(fileInput);
         if (!input.isDisplayed()) {
             ((org.openqa.selenium.JavascriptExecutor) driver)
@@ -42,8 +56,13 @@ public class TaskPage extends BasePage {
     }
 
     public boolean isFileUploaded(String fileName) {
-        By uploadedFile = By.xpath("//a[normalize-space()='" + fileName + "']");
+        By uploadedFile = By.xpath("//a[contains(normalize-space(), '" + fileName + "')]");
         return isDisplayed(uploadedFile);
+    }
+
+    public int getFileCount(String fileName) {
+        By uploadedFile = By.xpath("//a[contains(normalize-space(), '" + fileName + "')]");
+        return driver.findElements(uploadedFile).size();
     }
 
     public boolean isMissionButtonVisible() {

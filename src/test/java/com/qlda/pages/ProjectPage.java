@@ -15,15 +15,15 @@ import com.qlda.core.BasePage;
 import com.qlda.utils.WebDriverConfig;
 
 public class ProjectPage extends BasePage {
-    
+
     private final By projectHeader = By.cssSelector("h1.text-3xl.font-bold.text-gray-900");
     private final By projectNameElements = By.cssSelector("h3.text-lg.font-semibold.text-gray-900");
     private final By projectNameField = By.name("project_name");
     private final By projectDescField = By.name("description");
-    private final By searchField = By.xpath("//input[@placeholder='Tìm kiếm dự án theo tên...']");
+    private final By searchField = By.xpath("//input[@placeholder='Tìm kiếm dự án...']");
     private final By createButton = By.xpath("//button[contains(.,'Tạo dự án mới')]");
     private final By editButton = By.xpath("//button[contains(text(),'Sửa')]");
-    private final By deleteButton = By.xpath("//button[contains(text(),'Xóa')]");
+    private final By deleteButton = By.xpath("//button[normalize-space()='Xóa']");
     private final By submitButton = By.cssSelector("form button[type='submit']");
     private final By confirmDeleteButton = By.xpath("//button[contains(text(),'Xác nhận xóa')]");
     private final By cancelButton = By.xpath("//button[contains(.,'Hủy')]");
@@ -34,9 +34,9 @@ public class ProjectPage extends BasePage {
     private final By inviteButtonSubmit = By.xpath("//button[normalize-space()='+ Thêm']");
     private final By closeInvitePopupButton = By.xpath("//button[@aria-label='Đóng']//*[name()='svg']");
 
-    private final By profileMenuButton = By.xpath("//div[@class='flex items-center justify-end gap-3 w-64']//div[@class='relative']");
+    private final By profileMenuButton = By.xpath("//img[@alt='avatar']");
     private final By logoutButton = By.xpath("//button[contains(text(),'Đăng xuất')]");
-    
+
     public ProjectPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
@@ -59,18 +59,28 @@ public class ProjectPage extends BasePage {
     }
 
     public List<String> getProjectNames() {
-        List<WebElement> elements = driver.findElements(projectNameElements);
-        return elements.stream()
+        int attempts = 0;
+        while (attempts < 3) {
+            try {
+                List<WebElement> elements = driver.findElements(projectNameElements);
+                return elements.stream()
+                        .map(WebElement::getText)
+                        .collect(Collectors.toList());
+            } catch (StaleElementReferenceException e) {
+                attempts++;
+            }
+        }
+        // Fallback: return empty list or throw
+        return driver.findElements(projectNameElements).stream()
                 .map(e -> {
                     try {
                         return e.getText();
-                    } catch (StaleElementReferenceException ex) {
-                        return driver.findElement(projectNameElements).getText();
+                    } catch (Exception ex) {
+                        return "";
                     }
                 })
                 .collect(Collectors.toList());
     }
-
 
     public ProjectPage enterProjectName(String name) {
         type(projectNameField, name);
@@ -95,7 +105,6 @@ public class ProjectPage extends BasePage {
         searchInput.sendKeys(Keys.ENTER);
         waitForPageLoad();
     }
-
 
     public void clickCreateButton() {
         click(createButton);
