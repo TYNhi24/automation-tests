@@ -2,6 +2,23 @@
 
 Dự án này chứa các kịch bản kiểm thử End-to-End (E2E) cho ứng dụng QLDA, sử dụng Selenium và TestNG.
 
+---
+
+## 📂 Tổng quan Hệ thống & Tài liệu (Project Resources)
+
+Để thuận tiện cho việc theo dõi toàn bộ hệ sinh thái dự án, các liên kết quan trọng được tổng hợp tại đây:
+
+| Thành phần | Liên kết | Ghi chú |
+| :--- | :--- | :--- |
+| **Source Code (Frontend)** | [GitHub - QLDA Frontend](https://github.com/phandinhphu/qlda-fe.git) | React.js |
+| **Source Code (Backend)** | [GitHub - QLDA Backend](https://github.com/phandinhphu/qlda-be.git) | Node.js, Express, MongoDB |
+| **Tài liệu đặc tả (SRS)** | [Google Drive - SRS Document](https://docs.google.com/document/d/1rnbpPP_nFh6-Hyz91euBZT-0uAFgycWn/edit?usp=sharing&ouid=114249575033992896291&rtpof=true&sd=true) | Phân tích yêu cầu hệ thống |
+| **Quản lý dự án (Agile/Scrum)** | [Trello - Project Management](https://trello.com/invite/b/68cd192c739eed141784f7d4/ATTI64e2be3aa551d7295c7ab6331ee0cfeb515F83F8/qlduan) | Theo dõi tiến độ (Tasks/Sprints) |
+| **Kịch bản kiểm thử (Manual)** | [Google Sheets - Test Case](https://docs.google.com/spreadsheets/d/1nQ_Ll6Bz5PkIvxCiugsY_g13kRUNLa8j2nEr1zVY1yY/edit?usp=sharing) | Test Cases chi tiết |
+| **Quản lý lỗi (Bug Tracking)** | [Trello - Bug Report Board](https://trello.com/invite/b/69455693ff09e989731b0586/ATTI226dc524e8d3622a214b58841013eeb23DD6B97C/quản-li-bug-của-project-qlduan) | Danh sách bug và trạng thái fix |
+
+---
+
 ## 🚀 Yêu cầu cài đặt (Prerequisites)
 
 Để chạy dự án này, bạn cần cài đặt các phần mềm sau trên máy của mình:
